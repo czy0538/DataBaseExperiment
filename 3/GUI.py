@@ -44,10 +44,10 @@ class Ui_Form(object):
         outputdata = ""  # 存放获得的内容
         cursor = db.cursor()  # 获取游标
         cursor.execute('''select sno,sname,ssex,sage,saddr
-                              from s 
-                              where s.saddr=?
-                              ''',
-                       (message))
+                        from s
+                        where s.saddr=?
+                        ''',
+                    (message))
         row = cursor.fetchone()  # 读取游标数据
         if row is None:  # 没有这个人输出没有
             outputdata = '查无此人'

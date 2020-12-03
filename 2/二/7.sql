@@ -1,0 +1,1 @@
+drop view S_C_GRADE
