@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>866</width>
+    <height>655</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>180400501曹志远实验4</string>
+  </property>
+  <widget class="QPushButton" name="Do">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>510</y>
+     <width>181</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>执行</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="Display">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>70</y>
+     <width>391</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>180400501 曹志远</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>300</y>
+     <width>125</width>
+     <height>142</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>表格选择</string>
+   </property>
+   <widget class="QCheckBox" name="STable">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>105</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>S表</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="SCTable">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>105</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SC表</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="CTable">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>105</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>C表</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>180</y>
+     <width>231</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>插入</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>修改</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>查询</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>删除</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>130</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>功能选择</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="UserInput">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>300</y>
+     <width>401</width>
+     <height>281</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>Do</sender>
+   <signal>clicked()</signal>
+   <receiver>UserInput</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>600</x>
+     <y>532</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>556</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
