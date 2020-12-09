@@ -23,7 +23,7 @@ This is -1 if no SQL has been executed or if the number of rows is unknown. Note
 ## Cursor Functions
 
 ### execute(sql, *parameters)
-Prepares and executes a SQL statement, returning the Cursor object itself. The optional parameters may be passed as a sequence, as specified by the DB API, or as individual values.
+Prepares and executes a SQL statement, **returning the Cursor object itself.** The optional parameters may be passed as a sequence, as specified by the DB API, or as individual values.
 ```python
 # standard
 cursor.execute("select a from tbl where b=? and c=?", (x, y))
@@ -344,7 +344,7 @@ Cursor objects do support the Python context manager syntax (the `with` statemen
 ```python
 with cnxn.cursor() as crsr:
     do_stuff
-```    
+```
 is essentially equivalent to:
 ```python
 crsr = cnxn.cursor()

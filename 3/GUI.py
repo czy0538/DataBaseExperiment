@@ -42,7 +42,7 @@ class Ui_Form(object):
         message = self.inputAdd.text()  # 获取输入的字符串
         db = dataBase.DataBase()
         outputdata = ""  # 存放获得的内容
-        cursor = db.cursor()  # 获取游标
+        cursor = db.getCursor()  # 获取游标
         cursor.execute('''select sno,sname,ssex,sage,saddr
                         from s
                         where s.saddr=?

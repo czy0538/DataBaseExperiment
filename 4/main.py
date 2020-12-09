@@ -1,12 +1,12 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-import GUI
+import ui
 
 
 def main():
     app = QApplication(sys.argv)
     # 初始化
-    myWin = GUI.MyMainForm()
+    myWin = ui.MyMainForm()
     # 将窗口控件显示在屏幕上
     myWin.show()
     # 程序运行，sys.exit方法确保程序完整退出。
