@@ -21,6 +21,8 @@ class Ui_Form(object):
         self.mode = ''  # 功能模式
         self.cursor = db.getCursor()
         self.cnxn = db.getCnxn()
+        self.display_item = ''  # select子句
+        self.condition_item = ''  # where子句
 
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -211,8 +213,6 @@ class Ui_Form(object):
 
         print(self.lineEditMessage)
 
-
-
     def MessageBox_Critical(self, err):
         """严重错误"""
         QMessageBox.critical(self, '错误', str(err),
@@ -228,15 +228,26 @@ class Ui_Form(object):
         self.clearLineEdit()
         # 获取模式
         self.mode = self.comboBox_mode.currentText()
+        self.getDisplay_item()
         if self.mode == '查询':
-            pass
-            #self.cursor.execute('select ' + self.display_item + ' from S where ' + self.condition_item + ';')
+            self.lineEdit_display.setText(self.display_item)
+            # self.cursor.execute('select ' + self.display_item + ' from S where ' + self.condition_item + ';')
+
         elif self.mode == '更新':
             pass
         elif self.mode == '删除':
             pass
         elif self.mode == '插入':
             pass
+
+    def getDisplay_item(self):
+        self.display_item = ''
+        for i in range(0, 11):
+            if self.isSelected[i]:
+                self.display_item = self.display_item + self.lineEditMessage[i] + ','
+
+        if len(self.display_item) != 0:
+            self.display_item = self.display_item[0: len(self.display_item) - 1]  # 去掉结尾的逗号
 
 
 class MyMainForm(QMainWindow, Ui_Form):
