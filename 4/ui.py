@@ -15,14 +15,17 @@ import dataBase
 
 class Ui_Form(object):
     def __init__(self):
+        self.table_item = ''
         db = dataBase.DataBase(messagebox=self)
-        self.isSelected = [None] * 11  # 框选list,bool
+        self.isSelected = [False] * 11  # 框选list,bool
         self.lineEditMessage = [''] * 11  # 获取所有文本框中的内容
         self.mode = ''  # 功能模式
         self.cursor = db.getCursor()
         self.cnxn = db.getCnxn()
         self.display_item = ''  # select子句
         self.condition_item = ''  # where子句
+        self.table_item = ''  # from子句
+        self.table_selected = [False] * 3  # 0为S,1为SC，2为C
 
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -210,7 +213,6 @@ class Ui_Form(object):
         self.lineEditMessage[8] = self.lineEdit_cpno.text()
         self.lineEditMessage[9] = self.lineEdit_ccredit.text()
         self.lineEditMessage[10] = self.lineEdit_grade.text()
-
         print(self.lineEditMessage)
 
     def MessageBox_Critical(self, err):
@@ -219,11 +221,20 @@ class Ui_Form(object):
                              QMessageBox.Abort, QMessageBox.Abort)
         sys.exit(-1)
 
+    def MessageBox_wrongInput(self):
+        """输入错误弹出该框"""
+        QMessageBox.warning(self, '输入错误', '输入条件有误，请重新输入', QMessageBox.Ok)
+        # 执行清理
+        self.clearCheckBox()
+        self.clearLineEdit()
+
     def PushButton_ok(self):
         """按下ok按钮后的行为"""
         # 获取和清空
         self.getSelected()
         self.getLineEdit()
+        self.getTable_selected()
+        self.getTable_item()
         self.clearCheckBox()
         self.clearLineEdit()
         # 获取模式
@@ -240,14 +251,49 @@ class Ui_Form(object):
         elif self.mode == '插入':
             pass
 
-    def getDisplay_item(self):
+    def getDisplay_item(self):  # 有问题，这里获得的应该是项目名而非框里的内容
+        """获取select子句内容"""
         self.display_item = ''
         for i in range(0, 11):
             if self.isSelected[i]:
                 self.display_item = self.display_item + self.lineEditMessage[i] + ','
-
         if len(self.display_item) != 0:
             self.display_item = self.display_item[0: len(self.display_item) - 1]  # 去掉结尾的逗号
+
+    def getCondition_item(self):
+        pass
+
+    def getTable_item(self):
+        """获取from子句内容"""
+        self.table_item = ''
+        if self.table_selected[1]:  # 选中成绩一定需要SC表
+            self.table_item += self.condition_item + 'SC,'
+        if self.table_selected[0]:
+            self.table_item += self.condition_item + 'S,'
+        if self.table_selected[2]:
+            self.table_item += self.condition_item + 'C,'
+        self.table_item = self.table_item[0:len(self.table_item) - 1]
+        print(self.table_item)
+
+    def getTable_selected(self):
+        """获取表是否选中"""
+        self.table_selected = [False] * 3
+        if self.isSelected[10]:  # SC选中检测
+            self.table_selected[1] = True
+        for i in range(7, 10):  # C选中检测
+            if self.isSelected[i]:
+                self.table_selected[2] = True
+        for i in range(2, 6):
+            if self.isSelected[i]:  # S选中检测
+                self.table_selected[0] = True
+        # 如果没有表被选中，则输出error
+        i = 0
+        while i < 3:
+            if self.table_selected[i]:
+                break;
+            i += 1
+        if i == 3:
+            self.MessageBox_wrongInput()
 
 
 class MyMainForm(QMainWindow, Ui_Form):
