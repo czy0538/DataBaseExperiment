@@ -30,7 +30,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(829, 644)
-        self.lineEdit_display = QtWidgets.QLineEdit(Form)
+        self.lineEdit_display = QtWidgets.QTextEdit(Form)
         self.lineEdit_display.setGeometry(QtCore.QRect(20, 310, 781, 321))
         self.lineEdit_display.setObjectName("lineEdit_display")
         self.comboBox_mode = QtWidgets.QComboBox(Form)
@@ -136,7 +136,7 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "180400501 曹志远 数据库实验4"))
-        self.lineEdit_display.setText(_translate("Form", "                                   180400501 曹志远"))
+        self.lineEdit_display.setPlainText(_translate("Form", "                                   180400501 曹志远"))
         self.comboBox_mode.setItemText(0, _translate("Form", "查询"))
         self.comboBox_mode.setItemText(1, _translate("Form", "插入"))
         self.comboBox_mode.setItemText(2, _translate("Form", "删除"))
@@ -235,37 +235,143 @@ class Ui_Form(object):
         self.getLineEdit()
         self.getTable_selected()
         self.getTable_item()
+        self.getCondition_item()
         self.clearCheckBox()
         self.clearLineEdit()
         # 获取模式
         self.mode = self.comboBox_mode.currentText()
         self.getDisplay_item()
+        display = ''
         if self.mode == '查询':
-            self.lineEdit_display.setText(self.display_item)
-            # self.cursor.execute('select ' + self.display_item + ' from S where ' + self.condition_item + ';')
-
+            if len(self.condition_item) != 0:
+                mysql = 'select ' + self.display_item + ' from' + self.table_item + ' where' + self.condition_item + ';'
+            else:
+                mysql = 'select ' + self.display_item + ' from' + self.table_item + ';'
+            for row in self.cursor.execute(mysql):
+                print(row.cursor_description)  # 行描述信息
+                for i in row:
+                    display += str(i)
+                display += '\n'
         elif self.mode == '更新':
             pass
         elif self.mode == '删除':
             pass
         elif self.mode == '插入':
             pass
+        self.lineEdit_display.setPlainText(display)
 
     def getDisplay_item(self):  # 有问题，这里获得的应该是项目名而非框里的内容
         """获取select子句内容"""
-        self.display_item = ''
-        for i in range(0, 11):
-            if self.isSelected[i]:
-                self.display_item = self.display_item + self.lineEditMessage[i] + ','
-        if len(self.display_item) != 0:
-            self.display_item = self.display_item[0: len(self.display_item) - 1]  # 去掉结尾的逗号
+        self.display_item = ' '
+        # sclass
+        if self.isSelected[0] and len(self.lineEditMessage[0]) == 0:
+            if self.table_selected[0]:
+                self.display_item += 'S.sclass,'
+            else:
+                self.display_item += 'SC.sclass,'
+        # sno
+        if self.isSelected[1] and len(self.lineEditMessage[1]) == 0:
+            if self.table_selected[0]:
+                self.display_item += 'S.sno,'
+            else:
+                self.display_item += 'SC.sno,'
+
+        # cno
+        if self.isSelected[6] and len(self.lineEditMessage[6]) == 0:
+            if self.table_selected[2]:
+                self.display_item += 'C.cno,'
+            else:
+                self.display_item += 'SC.cno,'
+
+        if self.isSelected[2] and len(self.lineEditMessage[2]) == 0:
+            self.display_item += 'sname,'
+
+        if self.isSelected[3] and len(self.lineEditMessage[3]) == 0:
+            self.display_item += 'ssex,'
+
+        if self.isSelected[4] and len(self.lineEditMessage[4]) == 0:
+            self.display_item += 'sage,'
+
+        if self.isSelected[5] and len(self.lineEditMessage[5]) == 0:
+            self.display_item += 'sdept,'
+
+        if self.isSelected[7] and len(self.lineEditMessage[7]) == 0:
+            self.display_item += 'cname,'
+
+        if self.isSelected[8] and len(self.lineEditMessage[8]) == 0:
+            self.display_item += 'cpno,'
+
+        if self.isSelected[9] and len(self.lineEditMessage[9]) == 0:
+            self.display_item += 'ccredit,'
+
+        if self.isSelected[10] and len(self.lineEditMessage[10]) == 0:
+            self.display_item += 'grade,'
+
+        self.display_item = self.display_item[0: len(self.display_item) - 1]  # 去掉结尾的逗号
 
     def getCondition_item(self):
-        pass
+        """获取where子句内容"""
+        self.condition_item = ' '
+        # 表连接：
+        if self.table_selected[0] and self.table_selected[1] and not self.table_selected[2]:  # S,SC
+            self.condition_item += 'S.sclass=SC and sclass and S.sno=SC.sno and'
+        elif not self.table_selected[0] and self.table_selected[1] and self.table_selected[2]:  # SC,C
+            self.condition_item += 'C.cno=SC.cno and'
+        elif self.table_selected[0] and self.table_selected[1] and self.table_selected[2]:  # 全选
+            self.condition_item += 'S.sclass=SC.sclass and S.sno=SC.sno and SC.cno=C.cno and'
+            # 其他情况无需表连接
+
+            # 其他where子句
+            # sclass
+            if self.isSelected[0] and len(self.lineEditMessage[0]) != 0:
+                if self.table_selected[0]:
+                    self.condition_item += 'S.sclass=' + self.lineEditMessage[0] + ' and'
+                else:
+                    self.condition_item += 'SC.sclass=' + self.lineEditMessage[0] + ' and'
+            # sno
+            if self.isSelected[1] and len(self.lineEditMessage[1]) != 0:
+                if self.table_selected[0]:
+                    self.condition_item += 'S.sno=' + self.lineEditMessage[1] + ' and'
+                else:
+                    self.condition_item += 'SC.sno=' + self.lineEditMessage[1] + ' and'
+
+            # cno
+            if self.isSelected[6] and len(self.lineEditMessage[6]) != 0:
+                if self.table_selected[2]:
+                    self.condition_item += 'C.cno=' + self.lineEditMessage[6] + ' and'
+                else:
+                    self.condition_item += 'SC.cno=' + self.lineEditMessage[6] + ' and'
+
+            if self.isSelected[2] and len(self.lineEditMessage[2]) != 0:
+                self.condition_item += 'sname=' + self.lineEditMessage[2] + ' and'
+
+            if self.isSelected[3] and len(self.lineEditMessage[3]) != 0:
+                self.condition_item += 'ssex=' + self.lineEditMessage[3] + ' and'
+
+            if self.isSelected[4] and len(self.lineEditMessage[4]) != 0:
+                self.condition_item += 'sage=' + self.lineEditMessage[4] + ' and'
+
+            if self.isSelected[5] and len(self.lineEditMessage[5]) != 0:
+                self.condition_item += 'sdept=' + self.lineEditMessage[5] + ' and'
+
+            if self.isSelected[7] and len(self.lineEditMessage[7]) != 0:
+                self.condition_item += 'cname=' + self.lineEditMessage[7] + ' and'
+
+            if self.isSelected[8] and len(self.lineEditMessage[8]) != 0:
+                self.condition_item += 'cpno=' + self.lineEditMessage[8] + ' and'
+
+            if self.isSelected[9] and len(self.lineEditMessage[9]) != 0:
+                self.condition_item += 'ccredit=' + self.lineEditMessage[9] + ' and'
+
+            if self.isSelected[10] and len(self.lineEditMessage[10]) != 0:
+                self.condition_item += 'grade=' + self.lineEditMessage[10] + ' and'
+
+        self.condition_item = self.condition_item[0:len(self.condition_item) - 3]
+        print(self.condition_item)
 
     def getTable_item(self):
         """获取from子句内容"""
-        self.table_item = ''
+        self.table_item = ' '
         if self.table_selected[1]:  # 选中成绩一定需要SC表
             self.table_item += self.condition_item + 'SC,'
         if self.table_selected[0]:
@@ -287,12 +393,13 @@ class Ui_Form(object):
             if self.isSelected[i]:  # S选中检测
                 self.table_selected[0] = True
         # 如果没有表被选中，则输出error
+        # 选中S,C但没选中SC也为逻辑错误
         i = 0
         while i < 3:
             if self.table_selected[i]:
-                break;
+                break
             i += 1
-        if i == 3:
+        if i == 3 or (self.table_selected[0] and self.table_selected[2] and not self.table_selected[1]):
             self.MessageBox_wrongInput()
 
 
