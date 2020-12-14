@@ -248,8 +248,17 @@ class Ui_Form(object):
                     for i in row:
                         display += str(i).strip().ljust(10, ' ')
                     display += '\n'
-            elif self.mode == '更新':
-                pass
+            elif self.mode == '修改':
+                self.getTable_selected()
+                self.getCondition_item()
+                self.isSingleTable()  # 检测单表
+                self.getTable_item()
+                mysql = 'update ' + self.table_item + ' set ' + self.lineEdit_display.toPlainText() \
+                        + ' where ' + self.condition_item
+                self.lineEdit_display.clear()
+                updated = self.cursor.execute(mysql).rowcount
+                display = str(updated) + '行被修改'
+                self.cnxn.commit()
             elif self.mode == '删除':
                 self.getTable_selected()
                 self.isSingleTable()  # 检测from合法性
@@ -262,8 +271,8 @@ class Ui_Form(object):
 
             elif self.mode == '插入':
                 self.getTable_selected()
-                self.isSingleTable()  # 检测from合法性
-                self.getTable_item()  # FROM子句
+                self.isSingleTable()  # 检测单表
+                self.getTable_item()
                 insert_values = ''
                 # S表插入
                 if self.table_selected[0]:
