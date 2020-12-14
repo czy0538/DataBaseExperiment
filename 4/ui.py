@@ -255,13 +255,56 @@ class Ui_Form(object):
                 self.isSingleTable()  # 检测from合法性
                 self.getTable_item()  # FROM子句
                 self.getCondition_item()
-                mysql = 'delete from ' + self.table_item + ' where '+self.condition_item
+                mysql = 'delete from ' + self.table_item + ' where ' + self.condition_item
                 deleted = self.cursor.execute(mysql).rowcount
                 display = str(deleted) + '行被删除'
                 self.cnxn.commit()
 
             elif self.mode == '插入':
-                pass
+                self.getTable_selected()
+                self.isSingleTable()  # 检测from合法性
+                self.getTable_item()  # FROM子句
+                insert_values = ''
+                # S表插入
+                if self.table_selected[0]:
+                    self.table_item = ' S '
+                    for i in self.lineEditMessage[0:6]:
+                        if len(i) == 0:
+                            insert_values += '\'NULL\','
+                        else:
+                            insert_values += '\'%s\',' % i  # 字符拼接
+                # sc表插入
+                elif self.table_selected[1]:
+                    self.table_item = ' SC '
+                    temp = self.lineEditMessage[0:2] + list(self.lineEditMessage[6])
+                    for i in temp:
+                        if len(i) == 0:
+                            insert_values += '\'NULL\','
+                        else:
+                            insert_values += '\'%s\',' % i  # 字符拼接
+                    if len(self.lineEditMessage[10]) != 0:
+                        insert_values += '%s,' % self.lineEditMessage[10]
+                    else:
+                        insert_values += '%s,' % '-1'
+                # C表插入
+                elif self.table_selected[2]:
+                    self.table_item = ' C '
+                    for i in self.lineEditMessage[6:9]:
+                        if len(i) == 0:
+                            insert_values += '\'NULL\','
+                        else:
+                            insert_values += '\'%s\',' % i  # 字符拼接
+                    if len(self.lineEditMessage[9]) != 0:
+                        insert_values += '%s,' % self.lineEditMessage[9]
+                    else:
+                        insert_values += '%s,' % '-1'
+
+                insert_values = insert_values[0:len(insert_values) - 1]
+                mysql = 'insert into ' + self.table_item + ' values (' + insert_values + ' );'
+                print(mysql)
+                inserted = self.cursor.execute(mysql).rowcount
+                display = str(inserted) + '行被插入'
+                self.cnxn.commit()
         except ValueError:
             self.clearCheckBox()
             self.clearLineEdit()
