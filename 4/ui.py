@@ -124,6 +124,7 @@ class Ui_Form(object):
         # 选中清空按钮后清空文本框和所有输入内容
         self.pushButton_clear.clicked.connect(self.clearLineEdit)
         self.pushButton_clear.clicked.connect(self.clearCheckBox)
+        self.pushButton_clear.clicked.connect(self.lineEdit_display.clear)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

@@ -36,27 +36,3 @@ class DataBase:
             self.cnxn.rollback()
         else:
             self.cnxn.commit()
-
-
-def main():
-    db = DataBase()
-    cursor = db.getCursor()
-    # 数据库异常处理示例
-    try:
-        cursor.execute("SELECT * from S;")
-        row = cursor.fetchone()
-        while row:
-            print(row)
-            row = cursor.fetchone()
-    except pyodbc.DatabaseError as err:
-        print(err)
-    cursor.execute('update S set SAGE=20')
-    cursor.execute("SELECT * from S;")
-    rows = cursor.fetchall()
-    db.getCnxn().commit()
-    print(rows)
-
-
-if __name__ == "__main__":
-    # execute only if run as a script
-    main()
